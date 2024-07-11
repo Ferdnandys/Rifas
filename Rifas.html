@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteio Automático</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .countdown {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .participants {
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sorteio Automático</h1>
+
+    <div class="countdown" id="countdown"></div>
+
+    <div class="participants">
+        <h2>Participantes</h2>
+        <textarea id="participants" rows="5" cols="50" placeholder="Digite os nomes dos participantes, um por linha"></textarea>
+    </div>
+
+    <div id="winner" style="display: none; margin-top: 20px;">
+        <h2>Vencedor</h2>
+        <p id="winnerName"></p>
+    </div>
+
+    <script>
+        var participants = [];
+        var countdownDate = new Date("July 11, 2024 16:00:00").getTime(); // Data e hora do sorteio
+
+        // Iniciar contagem regressiva automaticamente
+        function startCountdown() {
+            var timer = setInterval(function() {
+                var now = new Date().getTime();
+                var distance = countdownDate - now;
+
+                if (distance <= 0) {
+                    clearInterval(timer);
+                    document.getElementById("countdown").innerHTML = "SORTEANDO...";
+                    setTimeout(function() {
+                        var winnerIndex = Math.floor(Math.random() * participants.length);
+                        var winnerName = participants[winnerIndex];
+                        document.getElementById("winnerName").innerHTML = winnerName;
+                        document.getElementById("winner").style.display = "block";
+                    }, 2000); // Tempo fictício para simular o sorteio
+                } else {
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    document.getElementById("countdown").innerHTML = "Tempo restante: " + minutes + "m " + seconds + "s ";
+                }
+            }, 1000);
+        }
+
+        // Capturar os participantes do textarea
+        document.getElementById("participants").addEventListener("input", function() {
+            var textareaValue = this.value.trim();
+            participants = textareaValue.split("\n").filter(function(participant) {
+                return participant.trim() !== "";
+            });
+        });
+
+        // Iniciar contagem regressiva automaticamente ao carregar a página (opcional)
+        window.onload = function() {
+            startCountdown();
+        };
+    </script>
+</body>
+</html>
